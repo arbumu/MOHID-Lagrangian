@@ -37,7 +37,7 @@
     contains
     procedure :: initialize => initKernelMOHIDWaterQuality
     procedure :: WQProcess
-    procedure :: Dilution
+    procedure :: DilutionW
     end type kernelMOHIDWaterQuality_class
     
     type(kernelUtils_class) :: KernelUtils_MOHIDWaterQuality   !< kernel utils
@@ -151,7 +151,7 @@
         depth = maxLevel(2) - depth
         
         !everywhere else will be 0
-        where (computeFlag == .true.)
+        where (computeFlag .eqv. .true.)
             mass(zoo, :) = sv%state(:,c_Zoo)
             mass(phyto, :) = sv%state(:,c_Pytho)
             mass(ammonia, :) = sv%state(:,c_NH4)
@@ -224,7 +224,7 @@
     !> Computes the dilution of dissolved material in the water column by increasing its volume
     !> @param[in] self, sv, bdata, time
     !---------------------------------------------------------------------------
-    function Dilution(self, sv, bdata, time, dt)
+    function DilutionW(self, sv, bdata, time, dt)
     class(kernelMOHIDWaterQuality_class), intent(in) :: self
     type(stateVector_class), intent(inout) :: sv
     type(background_class), dimension(:), intent(in) :: bdata
@@ -344,7 +344,7 @@
     !TODO : implement an initial volume variable and use it to define when tracers are to be deleted. Copy from Detritus
     where(sv%state(:,c_Age) > 43200) sv%active = .false.
     
-    end function Dilution
+    end function DilutionW
     
     !---------------------------------------------------------------------------
     !> @author Daniel Garaboa Paz - GFNL

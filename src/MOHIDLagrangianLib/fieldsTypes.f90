@@ -386,8 +386,10 @@
     real(prec), allocatable, dimension(:,:) :: comp2d
     integer, allocatable, dimension(:) :: aux
     type(string) :: outext
-    integer :: i
+    integer :: i, d
     !Begin-----------------------------------------------
+    d = 0
+    if(present(dimID))d=dimID
     select type(self)
     class is (scalar1d_field_class)
         allocate(comp1d(size(self%field)))
@@ -409,7 +411,7 @@
             if (dimID == 1) allocate(aux(size(self%field2D,2)))
             if (dimID == 2) allocate(aux(size(self%field2D,1)))
             comp2d = value
-            aux = minloc(abs(comp2d - self%field2D), DIM=dimID) !output is a 1D array
+            aux = minloc(abs(comp2d - self%field2D), DIM=d) !output is a 1D array
             getFieldNearestIndex = minval(aux) !get the smallest row or column ID
         else
             outext = '[field_class::getFieldNearestIndex]: scalar field must be 1D or 2D'
